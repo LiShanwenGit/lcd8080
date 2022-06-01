@@ -12,6 +12,7 @@
 
 ```
 lcd8080@0 {
+    status = "okay";
     compatible   = "lcd8080-ili9341";
     reg          = <0>;
     data-width   = <8>;
