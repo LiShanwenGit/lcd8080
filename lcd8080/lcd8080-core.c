@@ -16,7 +16,7 @@
 #include <linux/gpio.h>   
 #include <linux/delay.h>
 #include "lcd8080.h"
-
+#include <video/mipi_display.h>
 
 
 static u32 lcd8080_property_value(struct device *dev, const char *propname)
@@ -143,10 +143,21 @@ static int lcd8080_request_io_dt(struct device *dev, struct lcd8080_par *par)
         gpiod_direction_output(io_desp->wr, 0);
         dev_info(dev,"%s wr-gpios = %d\n",__func__,desc_to_gpio(io_desp->wr));
     }
+    io_desp->dc = lcd8080_parse_dt_signal(dev, "dc");
+    if(io_desp->dc ==NULL)
+    {
+        dev_err(dev,"%s can not find dc pin\n",__func__);
+        return -1;
+    }
+    else
+    {
+        gpiod_direction_output(io_desp->dc, 0);
+        dev_info(dev,"%s dc-gpios = %d\n",__func__,desc_to_gpio(io_desp->dc));
+    }
     io_desp->backlight = lcd8080_parse_dt_signal(dev, "backlight");
     if(io_desp->backlight ==NULL)
     {
-        dev_info(dev,"%s use default value\n",__func__);
+        dev_info(dev,"%s no use backlight pin\n",__func__);
     }
     else
     {
@@ -246,6 +257,15 @@ static int lcd8080_fb_setcolreg(u32 regno, u32 red,u32 green, u32 blue,u32 trans
     val |= chan_to_field(blue, &info->var.blue);
     ppt[regno] = val;
     return 0;
+}
+
+static void lcd8080_set_addr_win_default(struct lcd8080_par *par, int xs, int ys, int xe,int ye)
+{
+	write_reg(par, MIPI_DCS_SET_COLUMN_ADDRESS,(xs+40) >> 8, xs+40, ((xe+40) >> 8) & 0xFF, (xe+40) & 0xFF);
+
+	write_reg(par, MIPI_DCS_SET_PAGE_ADDRESS,((ys+52) >> 8) & 0xFF, (ys+52) & 0xFF, ((ye+52) >> 8) & 0xFF, (ye+52) & 0xFF);
+
+	write_reg(par, MIPI_DCS_WRITE_MEMORY_START);
 }
 
 static struct fb_ops lcd8080_ops = {
@@ -404,6 +424,10 @@ int lcd8080_probe_common(struct lcd8080_display_ops *display_ops, struct platfor
         return -1;
     }
     par->ops.disp_ops = display_ops;
+    if(par->ops.disp_ops->set_addr_win == NULL) //if not define set_addr_win, enable default function
+    {
+        par->ops.disp_ops->set_addr_win = lcd8080_set_addr_win_default;
+    }
     ret = lcd8080_parse_display_var_dt(dev, par);
     if(ret < 0)
     {

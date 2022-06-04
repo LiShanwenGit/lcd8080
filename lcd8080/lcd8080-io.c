@@ -58,13 +58,15 @@ void lcd8080_write_register(struct lcd8080_par *par, int len, ...)
     }
     buff = va_arg(args, unsigned int);//send command
     reg = buff;
-    gpiod_set_value(par->io_desp.wr, 1);
+    gpiod_set_value(par->io_desp.dc, 0);
     for(i=0;i<8;i++)
     {
         gpiod_set_value(par->io_desp.data[i],reg&0x01);
         reg >>= 1;
     }
-    while(buff)
+    len -= 1;
+    gpiod_set_value(par->io_desp.dc, 1); // set dc high level
+    while(len--)
     {
         buff = va_arg(args, unsigned int);//send data
         data = buff;

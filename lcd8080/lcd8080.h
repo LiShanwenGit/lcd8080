@@ -10,12 +10,12 @@
 #include <linux/kernel.h>
 #include <linux/fs.h>
 #include <linux/init.h>
-#include <linux/io.h> //含有 ioremap 函数 iounmap 函数
-#include <linux/uaccess.h> //含有 copy_from_user 函数和含有 copy_to_user 函数
-#include <linux/device.h> //含有类相关的设备函数
+#include <linux/io.h> 
+#include <linux/uaccess.h> 
+#include <linux/device.h> 
 #include <linux/cdev.h>
-#include <linux/of.h> //包含设备树相关函数
-#include <linux/fb.h> //包含 frame buffer
+#include <linux/of.h> 
+#include <linux/fb.h> 
 
 
 #define  LCD8080_DATA_WIDTH       16U
@@ -33,6 +33,7 @@ struct lcd8080_io_desp
     struct gpio_desc *cs;         //chip select signal
     struct gpio_desc *wr;         //write enable signal
     struct gpio_desc *rd;         //read enable signal
+    struct gpio_desc *dc;         //command or data signal
     struct gpio_desc *backlight;  //back light signal
     struct gpio_desc *data[LCD8080_DATA_WIDTH];   //data signal
 };
@@ -43,6 +44,7 @@ struct lcd8080_display_ops
 	int  (*init_display)(struct lcd8080_par *par);
     int  (*set_var)(struct lcd8080_par *par);
     int  (*set_gamma)(struct lcd8080_par *par, u32 *curves);
+    int  (*blank)(struct lcd8080_par *par, bool on);
 };
 
 struct lcd8080_ops
@@ -87,6 +89,14 @@ extern void lcd8080_write_register(struct lcd8080_par *par, int len, ...);
 
 extern int lcd8080_probe_common(struct lcd8080_display_ops *display_ops, struct platform_device *pdev);
 extern int lcd8080_remove_common(struct platform_device *pdev);
+
+
+#define NUMARGS(...)  (sizeof((int[]){__VA_ARGS__}) / sizeof(int))
+
+#define                                                        \
+write_reg(par, ...)                                            \
+((par)->ops.write_reg(par, NUMARGS(__VA_ARGS__), __VA_ARGS__))
+
 
 #define                                                  \
 LCD8080_DRIVER_REGISTER(_name, _compatible, _display)    \
