@@ -27,6 +27,7 @@ lcd8080@0 {
     rd-gpios     = <&pio 5 0 GPIO_ACTIVE_HIGH>; /* PF0 */
     reset-gpios  = <&pio 5 1 GPIO_ACTIVE_HIGH>; /* PF1 */
     wr-gpios     = <&pio 5 2 GPIO_ACTIVE_HIGH>; /* PF2 */
+    dc-gpios     = <&pio 5 3 GPIO_ACTIVE_HIGH>; /* PF3 */
     backlight-gpios = <&pio 5 3 GPIO_ACTIVE_HIGH>; /* PF3 */
     data-gpios   = <&pio 4 0 GPIO_ACTIVE_HIGH>, /* PE0 */
                    <&pio 4 1 GPIO_ACTIVE_HIGH>, /* PE1 */
