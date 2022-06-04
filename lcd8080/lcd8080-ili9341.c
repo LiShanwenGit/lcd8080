@@ -16,35 +16,35 @@ static int display_init(struct lcd8080_par *par)
 {
     par->ops.reset(par);
 	/* startup sequence for MI0283QT-9A */
-	// par->ops.write_reg(par, MIPI_DCS_SOFT_RESET);
-	// mdelay(5);
-	// par->ops.write_reg(par, MIPI_DCS_SET_DISPLAY_OFF);
-	// /* --------------------------------------------------------- */
-	// par->ops.write_reg(par, 0xCF, 0x00, 0x83, 0x30);
-	// par->ops.write_reg(par, 0xED, 0x64, 0x03, 0x12, 0x81);
-	// par->ops.write_reg(par, 0xE8, 0x85, 0x01, 0x79);
-	// par->ops.write_reg(par, 0xCB, 0x39, 0X2C, 0x00, 0x34, 0x02);
-	// par->ops.write_reg(par, 0xF7, 0x20);
-	// par->ops.write_reg(par, 0xEA, 0x00, 0x00);
-	// /* ------------power control-------------------------------- */
-	// par->ops.write_reg(par, 0xC0, 0x26);
-	// par->ops.write_reg(par, 0xC1, 0x11);
-	// /* ------------VCOM --------- */
-	// par->ops.write_reg(par, 0xC5, 0x35, 0x3E);
-	// par->ops.write_reg(par, 0xC7, 0xBE);
-	// /* ------------memory access control------------------------ */
-	// par->ops.write_reg(par, MIPI_DCS_SET_PIXEL_FORMAT, 0x55); /* 16bit pixel */
-	// /* ------------frame rate----------------------------------- */
-	// par->ops.write_reg(par, 0xB1, 0x00, 0x1B);
-	// /* ------------Gamma---------------------------------------- */
-	// /* write_reg(par, 0xF2, 0x08); */ /* Gamma Function Disable */
-	// par->ops.write_reg(par, MIPI_DCS_SET_GAMMA_CURVE, 0x01);
-	// /* ------------display-------------------------------------- */
-	// par->ops.write_reg(par, 0xB7, 0x07); /* entry mode set */
-	// par->ops.write_reg(par, 0xB6, 0x0A, 0x82, 0x27, 0x00);
-	// par->ops.write_reg(par, MIPI_DCS_EXIT_SLEEP_MODE);
-	// mdelay(100);
-	// par->ops.write_reg(par, MIPI_DCS_SET_DISPLAY_ON);
+	par->ops.write_reg(par, MIPI_DCS_SOFT_RESET);
+	mdelay(5);
+	par->ops.write_reg(par, MIPI_DCS_SET_DISPLAY_OFF);
+	/* --------------------------------------------------------- */
+	par->ops.write_reg(par, 0xCF, 0x00, 0x83, 0x30);
+	par->ops.write_reg(par, 0xED, 0x64, 0x03, 0x12, 0x81);
+	par->ops.write_reg(par, 0xE8, 0x85, 0x01, 0x79);
+	par->ops.write_reg(par, 0xCB, 0x39, 0X2C, 0x00, 0x34, 0x02);
+	par->ops.write_reg(par, 0xF7, 0x20);
+	par->ops.write_reg(par, 0xEA, 0x00, 0x00);
+	/* ------------power control-------------------------------- */
+	par->ops.write_reg(par, 0xC0, 0x26);
+	par->ops.write_reg(par, 0xC1, 0x11);
+	/* ------------VCOM --------- */
+	par->ops.write_reg(par, 0xC5, 0x35, 0x3E);
+	par->ops.write_reg(par, 0xC7, 0xBE);
+	/* ------------memory access control------------------------ */
+	par->ops.write_reg(par, MIPI_DCS_SET_PIXEL_FORMAT, 0x55); /* 16bit pixel */
+	/* ------------frame rate----------------------------------- */
+	par->ops.write_reg(par, 0xB1, 0x00, 0x1B);
+	/* ------------Gamma---------------------------------------- */
+	/* write_reg(par, 0xF2, 0x08); */ /* Gamma Function Disable */
+	par->ops.write_reg(par, MIPI_DCS_SET_GAMMA_CURVE, 0x01);
+	/* ------------display-------------------------------------- */
+	par->ops.write_reg(par, 0xB7, 0x07); /* entry mode set */
+	par->ops.write_reg(par, 0xB6, 0x0A, 0x82, 0x27, 0x00);
+	par->ops.write_reg(par, MIPI_DCS_EXIT_SLEEP_MODE);
+	mdelay(100);
+	par->ops.write_reg(par, MIPI_DCS_SET_DISPLAY_ON);
 	mdelay(20);
 	return 0;
 }

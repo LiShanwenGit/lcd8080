@@ -41,7 +41,7 @@ static struct gpio_desc *lcd8080_parse_dt_signal(struct device *dev, const char 
     return desp;
 }
 
-static int lcd8080_parse_dt_display_var(struct device *dev, struct lcd8080_par *par)
+static int lcd8080_parse_display_var_dt(struct device *dev, struct lcd8080_par *par)
 {
     struct lcd8080_display_var *display_var = &par->display_var;
     display_var->data_width = lcd8080_property_value(dev,"data-width");
@@ -376,7 +376,7 @@ static void lcd8080_set_ops(struct lcd8080_par *par)
     {
         par->ops.write = lcd8080_write_16bit;
     }
-    else if(par->display_var.data_width == 16)
+    else if(par->display_var.data_width == 8)
     {
         par->ops.write = lcd8080_write_8bit;
     }
@@ -404,7 +404,7 @@ int lcd8080_probe_common(struct lcd8080_display_ops *display_ops, struct platfor
         return -1;
     }
     par->ops.disp_ops = display_ops;
-    ret = lcd8080_parse_dt_display_var(dev, par);
+    ret = lcd8080_parse_display_var_dt(dev, par);
     if(ret < 0)
     {
         goto error;

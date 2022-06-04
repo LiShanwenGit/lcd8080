@@ -7,9 +7,9 @@ int lcd8080_write_16bit(struct lcd8080_par *par, void *buffer, size_t len)
     u16 *data = (u16*)buffer;
     while(len-=2)
     {
-        u8 write = *data;
+        u16 write = *data;
         gpiod_set_value(par->io_desp.wr, 0);
-        for(i=0;i<8;i++)
+        for(i=0;i<16;i++)
         {
             gpiod_set_value(par->io_desp.data[i],write&0x01);
             write >>= 1;
@@ -64,10 +64,9 @@ void lcd8080_write_register(struct lcd8080_par *par, int len, ...)
         gpiod_set_value(par->io_desp.data[i],reg&0x01);
         reg >>= 1;
     }
-    i = len - 1;
-    while(i--)
+    while(buff)
     {
-        buff = va_arg(args, unsigned int);//send command
+        buff = va_arg(args, unsigned int);//send data
         data = buff;
         gpiod_set_value(par->io_desp.wr, 0);
         for(i=0;i<8;i++)
